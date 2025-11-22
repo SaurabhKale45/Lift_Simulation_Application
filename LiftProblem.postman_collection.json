@@ -1,0 +1,341 @@
+{
+	"info": {
+		"_postman_id": "36ab2206-c4d9-4f53-84bc-dda3ec85bec6",
+		"name": "LiftProblem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30172858"
+	},
+	"item": [
+		{
+			"name": "LiftCall",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"current_floor\":\"10\",\r\n    \"direction\":\"down\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/lifts",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"lifts"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Ok: Lift Call",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"current_floor\":\"10\",\r\n    \"direction\":\"down\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/lifts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"lifts"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "127.0.0.1:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.27"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 22 Nov 2025 05:48:51 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"lift_id\": 1\n}"
+				}
+			]
+		},
+		{
+			"name": "SelectDestinations",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"destinations\":[8,5,2]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/lifts/:liftId",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"lifts",
+						":liftId"
+					],
+					"variable": [
+						{
+							"key": "liftId",
+							"value": "{{liftId}}"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Ok: Select Destinations",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"destinations\":[8,5,2]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/lifts/:liftId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"lifts",
+								":liftId"
+							],
+							"variable": [
+								{
+									"key": "liftId",
+									"value": "{{liftId}}"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "127.0.0.1:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.27"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 22 Nov 2025 05:58:44 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"lift_id\": \"1\",\n    \"queue\": [\n        8,\n        5,\n        2\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "FloorCancel",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"destinations\":[6,12]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/lifts/:liftId/cancel",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"lifts",
+						":liftId",
+						"cancel"
+					],
+					"variable": [
+						{
+							"key": "liftId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Ok: Floor Cancel",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"destinations\":[6,12]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/lifts/:liftId/cancel",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"lifts",
+								":liftId",
+								"cancel"
+							],
+							"variable": [
+								{
+									"key": "liftId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "127.0.0.1:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.27"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 22 Nov 2025 06:21:27 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"lift_id\": \"1\",\n    \"queue\": [\n        1,\n        3,\n        4,\n        5\n    ]\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "liftId",
+			"value": "1"
+		}
+	]
+}
