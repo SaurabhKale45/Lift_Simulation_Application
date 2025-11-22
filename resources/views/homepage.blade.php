@@ -192,10 +192,9 @@
 
         const lastClick = {};
 
-        // ====== Floor labels ======
         const label = f => f === 0 ? "G" : f === -1 ? "B1" : f === -2 ? "B2" : f;
 
-        // ====== Init UI ======
+        // ===== Init UI =====
         function initFloorSelector() {
             FLOORS.slice().reverse().forEach(f => {
                 const opt = document.createElement("option");
@@ -211,15 +210,15 @@
                 const card = document.createElement("div");
                 card.className = "card";
                 card.innerHTML = `
-            <h4>Lift ${id}</h4>
-            <div id="header-${id}">Floor ?, Idle</div>
-            <div class="shaft">
-                ${FLOORS.map(f => `
-                  <div class="cell" id="c-${id}-${f}">
-                    <span>${label(f)}</span>
-                    <span class="car"></span>
-                  </div>`).join("")}
-            </div>`;
+                <h4>Lift ${id}</h4>
+                <div id="header-${id}">Floor ${position}, ${direction}</div>
+                <div class="shaft">
+                    ${FLOORS.map(f => `
+                        <div class="cell" id="c-${id}-${f}">
+                            <span>${label(f)}</span>
+                            <span class="car"></span>
+                        </div>`).join("")}
+                </div>`;
                 liftsPanel.appendChild(card);
             }
         }
@@ -235,12 +234,12 @@
             });
         }
 
-        // ====== Outside Lift Call ======
+        // ====== Outside call ======
         async function callLift(dir) {
             const floor = parseInt(callFloorSelect.value);
             log(`Calling lift at floor ${label(floor)} (${dir})...`);
 
-            const res = await fetch("/lifts", {
+            const res = await fetch("/api/lifts", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -250,21 +249,21 @@
                     direction: dir
                 })
             });
+
             const data = await res.json();
             if (!res.ok) return log("❌ " + data.error, true);
 
             liftSelect.value = data.lift_id;
-            log(`✔ Lift ${data.lift_id} assigned (ETA: ${data.arrival_time}s)`);
+            log(`✔ Lift ${data.lift_id} assigned (ETA ${data.arrival_time}s)`);
         }
 
-        // ====== Inside lift button ======
+        // ====== Inside lift buttons ======
         async function handleFloorBtn(e) {
             const floor = parseInt(e.target.dataset.floor);
             const lift = parseInt(liftSelect.value);
             const key = `${lift}-${floor}`;
             const now = Date.now();
 
-            // double-click cancel
             if (now - (lastClick[key] || 0) < 500) {
                 lastClick[key] = 0;
                 cancelFloor(lift, floor);
@@ -276,7 +275,7 @@
 
         async function requestFloor(lift, floor) {
             log(`Requesting floor ${label(floor)} on Lift ${lift}`);
-            const res = await fetch(`/lifts/${lift}`, {
+            const res = await fetch(`/api/lifts/${lift}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -287,12 +286,12 @@
             });
             const data = await res.json();
             if (!res.ok) return log("❌ " + data.error, true);
-            log(`⬆ Added floor ${label(floor)} to Lift ${lift}`);
+            log(`⬆ Added floor ${label(floor)} → Lift ${lift}`);
         }
 
         async function cancelFloor(lift, floor) {
             log(`Cancelling floor ${label(floor)} on Lift ${lift}`);
-            const res = await fetch(`/lifts/${lift}/cancel`, {
+            const res = await fetch(`/api/lifts/${lift}/cancel`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -303,16 +302,21 @@
             });
             const data = await res.json();
             if (!res.ok) return log("❌ " + data.error, true);
-            log(`✖ Removed floor ${label(floor)} from Lift ${lift}`);
+            log(`✖ Removed floor ${label(floor)} → Lift ${lift}`);
         }
 
         // ====== Polling Status ======
         async function pollStatus() {
-            const res = await fetch("/lifts/all-lifts");
-            const lifts = await res.json(); // pure array
-            console.log(lifts);
+            const res = await fetch("/api/lifts/all-lifts");
+            const lifts = await res.json(); // must be an array
+
+            if (!Array.isArray(lifts)) {
+                console.error("Invalid /api/lifts/all-lifts response:", lifts);
+                return;
+            }
+
             const hash = JSON.stringify(lifts);
-            if (hash === lastJsonHash) return; // no change — do nothing
+            if (hash === lastJsonHash) return;
             lastJsonHash = hash;
 
             updateUI(lifts);
@@ -321,24 +325,24 @@
         function updateUI(lifts) {
             lifts.forEach(l => {
                 document.getElementById(`header-${l.id}`).textContent =
-                    `Floor ${label(l.position)}, ` + (l.direction === "idle" ? "Idle" : l.direction.toUpperCase());
+                    `Floor ${label(l.position)}, ${l.direction === "idle" ? "Idle" : l.direction.toUpperCase()}`;
 
                 FLOORS.forEach(f => {
-                    const c = document.getElementById(`c-${l.id}-${f}`);
-                    c.classList.toggle("active", f === l.position);
+                    const cell = document.getElementById(`c-${l.id}-${f}`);
+                    cell.classList.toggle("active", f === l.position);
                 });
             });
         }
 
-        // ====== Logging ======
+        // ====== Log ======
         function log(msg, err = false) {
-            const row = document.createElement("div");
-            row.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-            if (err) row.style.color = "#e57373";
-            statusLog.prepend(row);
+            const div = document.createElement("div");
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            if (err) div.style.color = "#f87171";
+            statusLog.prepend(div);
         }
 
-        // ====== Start App ======
+        // ====== Start ======
         document.addEventListener("DOMContentLoaded", () => {
             initFloorSelector();
             initLiftGrid();
@@ -349,6 +353,7 @@
             setInterval(pollStatus, 1000);
         });
     </script>
+
 </body>
 
 </html>
