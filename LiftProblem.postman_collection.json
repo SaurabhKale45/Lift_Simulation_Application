@@ -102,7 +102,9 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
+
 					"raw": "{\r\n    \"destinations\":[8,5,2]\r\n}",
+
 					"options": {
 						"raw": {
 							"language": "json"
@@ -206,6 +208,7 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n    \"destinations\":[6,12]\r\n}",
+
 					"options": {
 						"raw": {
 							"language": "json"
@@ -300,6 +303,91 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"lift_id\": \"1\",\n    \"queue\": [\n        1,\n        3,\n        4,\n        5\n    ]\n}"
+				}
+			]
+
+		},
+		{
+			"name": "GetAllLifts",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/lifts/status",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"lifts",
+						"status"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Ok: Get All Lifts",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/lifts/status",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"lifts",
+								"status"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Host",
+							"value": "127.0.0.1:8000"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.3.27"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Sat, 22 Nov 2025 08:59:30 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"lifts\": [\n        {\n            \"id\": 1,\n            \"position\": 10,\n            \"direction\": \"idle\"\n        },\n        {\n            \"id\": 2,\n            \"position\": -4,\n            \"direction\": \"idle\"\n        },\n        {\n            \"id\": 3,\n            \"position\": -4,\n            \"direction\": \"idle\"\n        },\n        {\n            \"id\": 4,\n            \"position\": -4,\n            \"direction\": \"idle\"\n        }\n    ]\n}"
 				}
 			]
 		}

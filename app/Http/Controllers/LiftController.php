@@ -10,17 +10,28 @@ class LiftController extends Controller
 {
     public function requestLift(Request $req)
     {
-        $floor = (int)$req->input('current_floor');
-        $direction = $req->input('direction');
+        $validated = $req->validate([
+            'current_floor' => 'required|integer|between:-4,12',
+            'direction'     => 'required|in:up,down'
+        ]);
+
+        $floor = (int)$validated['current_floor'];
+        $direction = $validated['direction'];
 
         if (!in_array($direction, ['up', 'down'])) {
             return response()->json(['error' => 'invalid direction'], 400);
         }
 
-        if ($floor < -4 || $floor > 16) {
+        if ($floor < config('constants.MIN_FLOOR') || $floor > config('constants.MAX_FLOOR')) {
             return response()->json(['error' => 'floor out of range'], 400);
         }
 
+        if ($floor == 12 && $direction == 'up') {
+            return response()->json(['error' => 'Last Floor- Cant go upward'], 400);
+        }
+        if ($floor == -4 && $direction == 'down') {
+            return response()->json(['error' => 'First Floor-cant go downward'], 400);
+        }
         // === Read current lift states ===
         $liftsPath = storage_path('app/lifts.json');
         $lifts = json_decode(file_get_contents($liftsPath), true);
@@ -46,7 +57,9 @@ class LiftController extends Controller
         file_put_contents($liftsPath, json_encode($lifts, JSON_PRETTY_PRINT));
 
         return response()->json([
-            'lift_id' => $chosenLift
+
+            'lift_id' => $chosenLift,
+            'arrival_time' => $bestTime . 'sec'
         ]);
     }
 
@@ -93,17 +106,11 @@ class LiftController extends Controller
     }
 
 
-    public function status()
-    {
-        return response()->json([
-            'lifts' => json_decode(file_get_contents(storage_path('app/lifts.json')), true),
-            'requests' => json_decode(file_get_contents(storage_path('app/requestList.json')), true)
-        ]);
-    }
+
     private function calculateArrivalTime($lift, $requestFloor)
     {
-        $floorTime = 3;    // seconds per floor
-        $doorTime  = 1.5;  // door open/close time
+        $floorTime = config('constants.LIFT_TRAVELLING_TIME');    // seconds per floor
+        $doorTime  = config('constants.LIFT_OPENING_TIME') + config('constants.LIFT_CLOSING_TIME');  // door open/close time
 
         $pos = $lift['position'];
         $dir = $lift['direction'];
@@ -200,6 +207,21 @@ class LiftController extends Controller
         return response()->json([
             'lift_id' => $id,
             'queue' => $lifts[$index]['queue']
+        ]);
+    }
+
+    public function getAllLifts()
+    {
+        $liftsPath = storage_path('app/lifts.json');
+
+        if (!file_exists($liftsPath)) {
+            return response()->json(['error' => 'lifts data not found'], 500);
+        }
+
+        $lifts = json_decode(file_get_contents($liftsPath), true);
+
+        return response()->json([
+            'lifts' => $lifts
         ]);
     }
 }

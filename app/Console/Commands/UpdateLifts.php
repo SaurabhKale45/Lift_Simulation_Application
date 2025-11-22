@@ -74,7 +74,8 @@ class UpdateLifts extends Command
 
                 if ($lift['position'] == $target) {
                     array_shift($lift['queue']);
-                    usleep(1500000); // 1.5s door simulation
+
+                    usleep((config('constants.LIFT_OPENING_TIME') + config('constants.LIFT_CLOSING_TIME')) * 1000000); // 1.5s door simulation
                 }
 
                 if (empty($lift['queue'])) {
@@ -89,7 +90,8 @@ class UpdateLifts extends Command
             flock($lockFp, LOCK_UN);
             fclose($lockFp);
 
-            sleep(3);
+
+            sleep(config('constants.LIFT_TRAVELLING_TIME'));
         }
     }
 
@@ -97,10 +99,10 @@ class UpdateLifts extends Command
     {
         if (!file_exists($this->liftsPath)) {
             file_put_contents($this->liftsPath, json_encode([
-                ["id" => 1, "position" => -3, "direction" => "idle", "queue" => []],
-                ["id" => 2, "position" => -3, "direction" => "idle", "queue" => []],
-                ["id" => 3, "position" => -3, "direction" => "idle", "queue" => []],
-                ["id" => 4, "position" => -3, "direction" => "idle", "queue" => []]
+                ["id" => 1, "position" => -4, "direction" => "idle", "queue" => []],
+                ["id" => 2, "position" => -4, "direction" => "idle", "queue" => []],
+                ["id" => 3, "position" => -4, "direction" => "idle", "queue" => []],
+                ["id" => 4, "position" => -4, "direction" => "idle", "queue" => []]
             ], JSON_PRETTY_PRINT));
         }
 
