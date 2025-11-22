@@ -46,9 +46,7 @@ class LiftController extends Controller
         file_put_contents($liftsPath, json_encode($lifts, JSON_PRETTY_PRINT));
 
         return response()->json([
-            'status' => 'queued',
-            'lift_id' => $chosenLift,
-            'arrival_time' => $bestTime
+            'lift_id' => $chosenLift
         ]);
     }
 
@@ -200,9 +198,7 @@ class LiftController extends Controller
         fclose($lock);
 
         return response()->json([
-            'status' => 'cancelled',
             'lift_id' => $id,
-            'removed' => $destinations,
             'queue' => $lifts[$index]['queue']
         ]);
     }
