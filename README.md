@@ -1,3 +1,12 @@
+<h1>Commands to run the Application</h1>
+<h2>composer install</h2>
+<h2>php artisan lifts:engine<span>(use second terminal)</span></h2>
+<h2>php artisan serve</h2>
+
+
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
